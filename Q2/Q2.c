@@ -2,9 +2,9 @@
 int main()
 {
     int n, m; 
-    printf("Enter the number of process and resources: \n"); 
+    printf("No. of processes and resources: \n"); 
     scanf("%d %d", &n, &m); 
-    printf("\nEnter the allocation for each process in each row: \n"); 
+    printf("\nEnter allocation matrix: \n"); 
     int alloc[n][m]; 
     for(int i=0; i < n; i++)
     {
@@ -13,7 +13,7 @@ int main()
             scanf("%d", &alloc[i][j]); 
         }
     }
-    printf("\nEnter the maximum resource for each process: \n"); 
+    printf("\nEnter max resource matrix: \n"); 
     int max[n][m]; 
     for(int i=0; i < n; i++)
     {
@@ -23,7 +23,7 @@ int main()
         }
     }
     int avail[m]; 
-    printf("\nEnter the available resources: \n"); 
+    printf("\nEnter available resources: \n"); 
     for(int i=0; i < m; i++)
     {
         scanf("%d", &avail[i]); 
@@ -65,7 +65,7 @@ int main()
         }
         if(process!=-1)
         {
-            printf("completed processID : %d\n", process); 
+            printf("Completed PID : %d\n", process); 
             seq[count]=process; 
             count ++ ; 
             for(int j=0; j < m; j++)
@@ -79,10 +79,10 @@ int main()
     }while(count !=n && process !=-1); 
     if(count == n)
     {
-        printf("Safe state Sequence : "); 
+        printf("SAFE_STATE Sequence : "); 
         for(int i = 0;  i  <  n;  i++)
 			printf("%d : ",  seq[i]); 
-        printf("\nRequest:(Process No, ResNo, Count) ");
+        printf("\nInput request (in the order Process No, ResNo, Count): ");
         int resNo, count, pno;
         scanf("%d %d %d", &pno, &resNo, &count);
         if(pno > n){
@@ -92,7 +92,7 @@ int main()
             printf("Invalid Resource No\n");
         }
         else if(count > avail[resNo]){
-            printf("Cannot allocate - Not enough res\n");
+            printf("Cannot allocate - Not enough resources\n");
         }
         else if(count + need[pno][resNo] > max[pno][resNo]){
             printf("Excess resource requested\n");
@@ -104,6 +104,6 @@ int main()
     }
     else
     {
-        printf("unsafe state\n"); 
+        printf("Unsafe State\n"); 
     }
 }
