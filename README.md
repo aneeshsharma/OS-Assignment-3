@@ -38,6 +38,8 @@ This should output an executable - `Q2.o`. Run the program as -
 $ ./Q2.o
 ```
 
+This program implements Banker's Algorithm for resource allocation and deadlock avoidance.
+
 The format is as follows: 
 - Processes No within `0` - `n-1`
 - Resource No from `0` - `m-1`
