@@ -22,7 +22,26 @@ int main() {
 	int len;
 	key_t key;
 
+	key_t keys[NO_OF_STUDENTS];
+	int msgids[NO_OF_STUDENTS];
 	system("touch CI-TA.txt");
+	for (int i = 0; i < NO_OF_STUDENTS; i++) {
+		char buffer_name[20];
+		char tmp[20];
+		sprintf(buffer_name, "S%d.txt", i + 1);
+		sprintf(tmp, "touch %s", buffer_name);
+		system(tmp);
+
+		if ((keys[i] = ftok(buffer_name, 69 + i + 1)) == -1) {
+			perror("msgget");
+			exit(1);
+		}
+
+		if ((msgids[i] = msgget(keys[i], PERMS | IPC_CREAT)) == -1) {
+			perror("msgget");
+			exit(1);
+		}
+	}
 
 	if ((key = ftok("CI-TA.txt", 69)) == -1) {
 		perror("msgget");
@@ -73,7 +92,17 @@ int main() {
 		perror("msgctl");
 		exit(1);
 	}
-
+	
+	for (int i = 0; i < NO_OF_STUDENTS; i++) {
+		char buffer_name[20];
+		char tmp[20];
+		
+		index = sprintf(buf.mtext, "%d ", marks[i]);
+		buf.mtype = 1;
+		if (msgsnd(msgids[i], &buf, index + 1, 0) == -1)
+			perror("msgsnd");
+		
+	}
 	printf("Done\n");
 
 	return 0;

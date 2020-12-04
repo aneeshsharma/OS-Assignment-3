@@ -16,6 +16,7 @@ struct MsgBuffer {
 	char mtext[200];
 };
 
+
 int nextInt(char* string, int* index, int* out) {
 	int len = strlen(string);
 	int num = 0;
@@ -37,39 +38,33 @@ int nextInt(char* string, int* index, int* out) {
 	}
 }
 
-char grade(int score, float avg) {
-	float factor = 25 / avg;
-	float rel = score * factor;
-	if (rel >= 45)
-		return 'S';
-	if (rel >= 40)
-		return 'A';
-	if (rel >= 35)
-		return 'B';
-	if (rel >= 30)
-		return 'C';
-	if (rel >=25)
-		return 'D';
-	if (rel >= 20)
-		return 'E';
-	return 'F';
-}
-
-int main() {
+int main(int argc, char** argv) {
 	struct MsgBuffer buf;
 	int msgid;
 	int toend;
+	int std_id;
 	key_t key;
+
+	std_id = argv[1][0] - '0';
+
+	char buffer_name[20];
+	char tmp[50];
+
+	printf("Student - %d\n", std_id);
+	sprintf(buffer_name, "S%d.txt", std_id);
+
 	
-	if ((key = ftok("CI-TA.txt", 69)) == -1) {
+	if ((key = ftok(buffer_name, 69 + std_id)) == -1) {
 		perror("ftok");
 		exit(1);
 	}
+
 
 	if ((msgid = msgget(key, PERMS)) == -1) {
 		perror("msgget");
 		exit(1);
 	}
+
 
 	if (msgrcv(msgid, &buf, sizeof(buf.mtext), 0, 0) == -1) {
 		perror("msgrcv");
@@ -77,34 +72,22 @@ int main() {
 	}
 
 	int index = 0;
-	int marks[NO_OF_STUDENTS];
+	int marks;
 
-	for (int i = 0; i < NO_OF_STUDENTS; i++) {
-		if (nextInt(buf.mtext, &index, &marks[i]) == -1) {
-			perror("invalid text");
-			exit(1);
-		}
+	if (nextInt(buf.mtext, &index, &marks) == -1) {
+		perror("invalid text");
+		exit(1);
 	}
 
-	printf("Marks-\n");
+	printf("Marks - %d\n", marks);
+	
+	sprintf(buffer_name, "S%d.txt", std_id);
+	sprintf(tmp, "rm %s", buffer_name);
+	system(tmp);
 
-	for (int i = 0; i < NO_OF_STUDENTS; i++)
-		printf("%d\n", marks[i]);
-
-	float avg = 0;
-
-	for (int i = 0; i < NO_OF_STUDENTS; i++)
-		avg += marks[i];
-	avg /= NO_OF_STUDENTS;
-
-	printf("Avg - %f\n", avg);
-
-	index = 0;
-	for (int i = 0; i < NO_OF_STUDENTS; i++)
-		index += sprintf(buf.mtext + index, "%c ", grade(marks[i], avg));
-
-	if (msgsnd(msgid, &buf, index + 1, 0) == -1)
-		perror("msgsnd");
-
+	if (msgctl(msgid, IPC_RMID, NULL) == -1) {
+		perror("msgctl");
+		exit(1);
+	}
 	return 0;
 }
