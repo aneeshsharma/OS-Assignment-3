@@ -28,3 +28,25 @@ The student id in the `Student.o` program needs to be within the range 1-5 and i
 
 Once the processes are running, provide the marks as input to `CI.o`. The data flow should occur and TA should calculate grades and send back to the CI. The CI then sends the marks to the respective students. The students read the marks from the respective queue and prints the marks.
 
+## Question 2
+This consists of a single program - `Q2.c`. Build this program using -
+```
+$ gcc Q2.c -o Q2.o
+```
+This should output an executable - `Q2.o`. Run the program as -
+```
+$ ./Q2.o
+```
+
+The format is as follows: 
+- Processes No within `0` - `n-1`
+- Resource No from `0` - `m-1`
+
+The arrays denote the following -
+- `alloc` - resource allocated to the process
+- `need` - resource required for the process
+- `max` - maximum resource count the process can request
+- `complete` - temporary flag when an array finishes the process
+
+Each row indicates a process.
+Each column indicates a resource.
