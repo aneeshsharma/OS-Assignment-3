@@ -50,3 +50,21 @@ The arrays denote the following -
 
 Each row indicates a process.
 Each column indicates a resource.
+
+## Question 3
+This consists of a single program - `Q3.c`. Build the program using -
+```
+$ gcc Q3.c -o Q3.o -lpthread
+```
+
+This should output an executable - `Q2.o`. Run the program as -
+```
+$ ./Q3.o
+```
+
+This program simulates the Dining Philosopher Problem which states that - K philosophers seated around a circular table with one chopstick between each pair of philosophers. There is one chopstick between each philosopher. A philosopher may eat if he can pickup the two chopsticks adjacent to him. One chopstick may be picked up by any one of its adjacent followers but not both.
+
+The philosopher has 3 states -
+- Thinking 
+- Hungry
+- Eating
